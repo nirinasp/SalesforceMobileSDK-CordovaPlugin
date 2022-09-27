@@ -80,6 +80,9 @@ public class SalesforceDroidGapActivity extends CordovaActivity implements Sales
     // Web app loaded?
     private boolean webAppLoaded = false;
 
+    // assets base url
+    private String baseUrl = "file:///android_asset/www";
+
     public SalesforceDroidGapActivity() {
         super();
         delegate = new SalesforceActivityDelegate(this);
@@ -92,6 +95,9 @@ public class SalesforceDroidGapActivity extends CordovaActivity implements Sales
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         init();
+
+        // change base url to eg: http(s)://localhost 
+        baseUrl = preferences.getString("scheme", "http") + "://" + preferences.getString("hostname", "localhost"); 
 
         // Get bootconfig
         bootconfig = BootConfig.getBootConfig(this);
@@ -469,7 +475,7 @@ public class SalesforceDroidGapActivity extends CordovaActivity implements Sales
         assert bootconfig.isLocal();
         String startPage = bootconfig.getStartPage();
         SalesforceHybridLogger.i(TAG, "loadLocalStartPage called - loading!");
-        loadUrl("file:///android_asset/www/" + startPage);
+        loadUrl(baseUrl + "/" + startPage);
         webAppLoaded = true;
     }
 
@@ -536,7 +542,7 @@ public class SalesforceDroidGapActivity extends CordovaActivity implements Sales
     public void loadErrorPage() {
         String errorPage = bootconfig.getErrorPage();
         SalesforceHybridLogger.i(TAG, "getErrorPageUrl called - local error page: " + errorPage);
-        loadUrl("file:///android_asset/www/" + errorPage);
+        loadUrl(baseUrl + "/" + errorPage);
     }
 
     /**
